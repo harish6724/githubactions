@@ -1,5 +1,28 @@
-<main>
-  <h1>GitHub Actions Demo</h1>
-  <app-counter />
+<div class="page-wrapper">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    CI/CD powered by GitHub Actions
+  </div>
+
+  <header class="glass-card hero-header">
+    <div class="header-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1>GitHub Actions Demo</h1>
+    <p class="subtitle">A live Angular app deployed via CI/CD pipeline</p>
+  </header>
+
+  <main class="main-content">
+    <app-counter />
+  </main>
+
+  <footer class="footer">
+    <span>Built with Angular 22 &nbsp;·&nbsp; Deployed via GitHub Actions</span>
+  </footer>
+
   <router-outlet />
-</main>
+</div>
