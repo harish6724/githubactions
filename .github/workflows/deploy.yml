@@ -41,10 +41,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node 24.x (LTS)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '24.x'
           cache: 'npm'
@@ -70,7 +70,7 @@ jobs:
         run: cp dist/app/browser/index.html dist/app/browser/404.html
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           # Angular 17+ (new application builder) writes to dist/<name>/browser/
           # Update this path if the project name in angular.json is not "app".
@@ -91,4 +91,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

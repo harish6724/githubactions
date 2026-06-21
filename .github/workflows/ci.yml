@@ -28,10 +28,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node 24.x (LTS)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '24.x'
           # Cache ~/.npm keyed on package-lock.json hash — speeds up installs
@@ -64,7 +64,7 @@ jobs:
           DEMO_API_KEY: ${{ secrets.DEMO_API_KEY }}
         run: |
           if [ -z "$DEMO_API_KEY" ]; then
-            echo "::warning::DEMO_API_KEY is not set. Add it under repo Settings -> Secrets."
+            echo "INFO: DEMO_API_KEY is not set. Add it under repo Settings -> Secrets."
           else
             echo "DEMO_API_KEY is present. Length=${#DEMO_API_KEY} chars (value is masked)."
           fi
