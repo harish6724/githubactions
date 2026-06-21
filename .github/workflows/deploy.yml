@@ -1,0 +1,94 @@
+# .github/workflows/deploy.yml
+#
+# PURPOSE: Build the Angular app and publish it to GitHub Pages on every
+#          push to main (including merged PRs).
+#
+# ONE-TIME SETUP (do this in the GitHub UI before the first push):
+#   Repo -> Settings -> Pages -> Build and deployment -> Source = "GitHub Actions"
+#
+# The deployed URL will be: https://<username>.github.io/<repo-name>/
+#
+# WHY base-href matters: Angular uses relative URLs for assets. When served
+# from a sub-path like /<repo-name>/, the base-href must match or the page
+# loads a blank screen (404s on JS/CSS bundles).
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  # Allows you to manually trigger the workflow from the Actions tab
+  workflow_dispatch:
+
+# Only one Pages deployment runs at a time. Never cancel a deploy in flight —
+# that could leave the site in a broken state.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+# These three permissions are REQUIRED by actions/deploy-pages@v4.
+# Without them the deploy step fails with a 403.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # ── Job 1: Build ──────────────────────────────────────────────────────────
+  build:
+    name: Build for Pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20.x (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build with production config and correct base-href
+        # DEMO_API_KEY is injected as an env var — Angular build-time tokens
+        # or environment files can consume it (e.g. environment.prod.ts).
+        # Here it demonstrates how secrets flow into build steps.
+        env:
+          DEMO_API_KEY: ${{ secrets.DEMO_API_KEY }}
+        run: |
+          npm run build -- \
+            --configuration production \
+            --base-href "/${{ github.event.repository.name }}/"
+
+      # SPA fallback: GitHub Pages serves a hard 404 for unknown paths.
+      # Copying index.html to 404.html makes Angular's router handle the
+      # path on the client side instead of showing a raw GitHub 404 page.
+      - name: Add SPA 404 fallback
+        run: cp dist/app/browser/index.html dist/app/browser/404.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Angular 17+ (new application builder) writes to dist/<name>/browser/
+          # Update this path if the project name in angular.json is not "app".
+          path: dist/app/browser
+
+  # ── Job 2: Deploy ─────────────────────────────────────────────────────────
+  deploy:
+    name: Publish to Pages
+    needs: build         # only runs if the build job succeeds
+    runs-on: ubuntu-latest
+
+    # The "environment" block wires this deployment to the github-pages
+    # environment. The url is shown in the Actions log and in PR "Deployments".
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
