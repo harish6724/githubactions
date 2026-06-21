@@ -105,9 +105,46 @@
   justify-content: center;
 }
 
+/* Contact link in header */
+.contact-link {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.06);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.contact-link:hover {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.45);
+  text-decoration: underline;
+}
+
 /* Footer */
 .footer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
   font-size: 0.78rem;
   color: var(--text-secondary);
   animation: fadeInUp 0.5s ease 0.3s both;
+}
+
+.footer-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+.footer-divider {
+  opacity: 0.4;
 }
