@@ -105,6 +105,15 @@
   justify-content: center;
 }
 
+/* Contact info row in header */
+.contact-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 /* Contact link in header */
 .contact-link {
   font-size: 0.9rem;
